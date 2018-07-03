@@ -52,8 +52,7 @@ def get_image_metadata(session, image_names, debug=False):
     Each image contains a url, which is the actual url of the image, and a
     user, which is the user who uploaded the image
     '''
-    image_information = {}
-    returned_json = {}
+    image_information = []
 
     endpoint = 'https://en.wikipedia.org/w/api.php'
     params = {'action':'query', 'format':'json', 'prop':'imageinfo',
@@ -76,12 +75,11 @@ def get_image_metadata(session, image_names, debug=False):
         image_info = first_page['imageinfo'][0]
 
         # Removes 'File:' from the name
-        name = image_info['canonicaltitle'][5:]
-        image_name['name'] = name
+        image_data['name'] = image_info['canonicaltitle'][5:]
         image_data['url'] = image_info['url']
         image_data['user'] = image_info['user']
 
-        image_information[name] = image_data
+        image_information.append(image_data)
 
     if debug:
         for key in image_information:
