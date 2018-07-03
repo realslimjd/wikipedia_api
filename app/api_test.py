@@ -77,6 +77,7 @@ def get_image_metadata(session, image_names, debug=False):
 
         # Removes 'File:' from the name
         name = image_info['canonicaltitle'][5:]
+        image_name['name'] = name
         image_data['url'] = image_info['url']
         image_data['user'] = image_info['user']
 
@@ -85,6 +86,8 @@ def get_image_metadata(session, image_names, debug=False):
     if debug:
         for key in image_information:
             print('{0} : {1}'.format(key, image_information[key]))
+
+    return image_information
 
 
 def main():
@@ -108,8 +111,9 @@ def main():
     session.headers.update({'User-Agent': 'JDV New Jersey Image Machine'})
 
     image_titles = find_images_on_page(session, debug=debug)
+    image_metadata = get_image_metadata(session, image_titles, debug=debug)
 
-    get_image_metadata(session, image_titles, debug=debug)
+    return image_metadata
 
 
 if __name__ == '__main__':
