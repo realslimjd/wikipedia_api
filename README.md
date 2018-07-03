@@ -3,7 +3,7 @@ Prequisites: [Python 3](http://docs.python-guide.org/en/latest/), [Pip](https://
 How to run this application:
 1. Make sure you have all the prerequisites installed. If not, follow the linked instructions above for how to install them.
 2. Clone this directory into a new folder.
-3. In the project directory, create a new virtualenv with the command `virtuaulenv -p python3 env`
+3. In the project directory, create a new virtualenv with the command `virtualenv -p python3 env`
 4. Activate the virtualenv with `source env/bin/activate`
 5. Install the dependencies by running `pip install -r requirements.txt`
 6. Change directories to the `app` directory with `cd app`
