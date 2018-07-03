@@ -20,7 +20,7 @@ def find_images_on_page(session, debug=False):
 
     endpoint = 'https://en.wikipedia.org/w/api.php'
     params = {'action':'query', 'format':'json', 'prop':'images',
-            'titles':'New Jersey'}
+            'imlimit':'500', 'titles':'New Jersey'}
 
     while 'batchcomplete' not in returned_json:
         result = session.get(endpoint, params=params)
