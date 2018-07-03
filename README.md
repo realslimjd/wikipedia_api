@@ -1,7 +1,7 @@
 Prequisites: [Python 3](http://docs.python-guide.org/en/latest/), [Pip](https://pip.pypa.io/en/stable/installing/), [Virtualenv](https://virtualenv.pypa.io/en/stable/installation/), [Git](https://git-scm.com/book/en/v2/Getting-Started-Installing-Git)
 
 How to run this application:
-1. Make sure you have all the prerequisites installed. If not, follow all the linked instructions above for how to install them.
+1. Make sure you have all the prerequisites installed. If not, follow the linked instructions above for how to install them.
 2. Clone this directory into a new folder.
 3. In the project directory, create a new virtualenv with the command `virtuaulenv -p python3 env`
 4. Activate the virtualenv with `source env/bin/activate`
