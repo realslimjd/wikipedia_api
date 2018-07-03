@@ -27,7 +27,7 @@ def find_images_on_page(session, debug=False):
         returned_json = result.json()
 
         if debug:
-            print(returned_json)
+            print('\n{0}'.format(returned_json))
 
         # 21648 is the page id
         # How can we make it not a magic number
@@ -41,12 +41,14 @@ def find_images_on_page(session, debug=False):
             params['imcontinue'] = returned_json['continue']['imcontinue']
 
     if debug:
-        print(image_titles)
+        for title in image_titles:
+            print(title)
 
     return image_titles
 
 
 # This could be threaded
+# and probably abstracted to be the same function as the one above
 def get_image_metadata(session, image_names, debug=False):
     '''
     Returns a dict of dicts, where each key is the name of the image.
@@ -54,38 +56,45 @@ def get_image_metadata(session, image_names, debug=False):
     user, which is the user who uploaded the image
     '''
     image_information = []
+    image_query_string = ('|').join(image_names[0:50])
 
     endpoint = 'https://en.wikipedia.org/w/api.php'
     params = {'action':'query', 'format':'json', 'prop':'imageinfo',
-                'iiprop':'url|user|userid|canonicaltitle'}
+                'iiprop':'url|user|userid|canonicaltitle',
+                'titles': image_query_string}
 
-    for image_name in image_names:
-        image_data = {}
+    returned_json = {}
 
-        params['titles'] = image_name
+    while image_names:
         result = session.get(endpoint, params=params)
         returned_json = result.json()
 
         if debug:
             print('\n{0}'.format(returned_json))
 
-        image_pages = returned_json['query']['pages']
-        # from https://stackoverflow.com/questions/3097866/access-an-arbitrary-element-in-a-dictionary-in-python
-        # because you can have more than result in the pages dict
-        first_page = next(iter(image_pages.values()))
-        image_info = first_page['imageinfo'][0]
+        for page in returned_json['query']['pages']:
+            image_info = page['imageinfo'][0]
+            image_data = {}
 
-        # Removes 'File:' from the name
-        image_data['name'] = image_info['canonicaltitle'][5:]
-        image_data['url'] = image_info['url']
-        image_data['user'] = image_info['user']
+            # Remove 'File:' from the name
+            image_data['name'] = image_info['canonicaltitle'][5:]
+            image_data['url'] = image_info['url']
+            image_data['user'] = image_info['user']
 
-        image_information.append(image_data)
+            image_information.append(image_data)
+
+        # if 'continue' in returned_json:
+        #     params['continue'] = returned_json['continue']['continue']
+        #     params['imcontinue'] = returned_json['continue']['imcontinue']
+
+        image_query_string = ('|').join(image_names[0:50])
+        image_names = image_names[50:]
+
 
     if debug:
-        for image in image_information:
-            print('User {0} provided image {1} at {2}'.format(image['user'],
-                image['name'], image['url']))
+        for info in image_information:
+            print('User {0} submitted {1} at {2}'.format(info['user'],
+                info['name'], info['url']))
 
     return image_information
 
