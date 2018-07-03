@@ -47,48 +47,46 @@ def find_images_on_page(session, debug=False):
     return image_titles
 
 
-# This could be threaded
-# and probably abstracted to be the same function as the one above
-def get_image_metadata(session, image_names, debug=False):
+# Note to self: Returns were not quite the same when we batched the requests
+# Would threading this be better, or would it be better to figure out what I
+# was doing wrong? (Probably both)
+def get_image_metadata(session, image_titles, debug=False):
     '''
     Returns a dict of dicts, where each key is the name of the image.
     Each image contains a url, which is the actual url of the image, and a
     user, which is the user who uploaded the image
     '''
     image_information = []
-    image_query_string = ('|').join(image_names[0:50])
 
     endpoint = 'https://en.wikipedia.org/w/api.php'
     params = {'action':'query', 'format':'json', 'prop':'imageinfo',
-                'iiprop':'url|user|userid|canonicaltitle',
-                'titles': image_query_string}
+                'iiprop':'url|user|userid|canonicaltitle'}
 
     returned_json = {}
 
-    while image_names:
+    for image_title in image_titles:
+        image_data = {}
+
+        # Per the API, you can query up to 50 titles per request
+        params['titles'] = image_title
         result = session.get(endpoint, params=params)
         returned_json = result.json()
 
         if debug:
             print('\n{0}'.format(returned_json))
 
-        for page in returned_json['query']['pages']:
-            image_info = page['imageinfo'][0]
-            image_data = {}
+        image_pages = returned_json['query']['pages']
+        # from https://stackoverflow.com/questions/3097866/access-an-arbitrary-element-in-a-dictionary-in-python
+        # because you can have more than result in the pages dict
+        first_page = next(iter(image_pages.values()))
+        image_info = first_page['imageinfo'][0]
 
-            # Remove 'File:' from the name
-            image_data['name'] = image_info['canonicaltitle'][5:]
-            image_data['url'] = image_info['url']
-            image_data['user'] = image_info['user']
+        # Removes 'File:' from the name
+        image_data['name'] = image_info['canonicaltitle'][5:]
+        image_data['url'] = image_info['url']
+        image_data['user'] = image_info['user']
 
-            image_information.append(image_data)
-
-        # if 'continue' in returned_json:
-        #     params['continue'] = returned_json['continue']['continue']
-        #     params['imcontinue'] = returned_json['continue']['imcontinue']
-
-        image_query_string = ('|').join(image_names[0:50])
-        image_names = image_names[50:]
+        image_information.append(image_data)
 
 
     if debug:
