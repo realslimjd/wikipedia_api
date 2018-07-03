@@ -10,5 +10,6 @@ How to run this application:
 7. Set the flask environment variable by typing `export FLASK_APP=site.py`
 8. Run the app with `flask run`
 9. Open your web browser and navigate to <http://127.0.0.1:5000/>
-10. You can stop the Flask server by hitting `Ctrl+C`
-11. Close the virtualenv with the command `deactivate`
+10. (Be patient)
+11. You can stop the Flask server by hitting `Ctrl+C`
+12. Close the virtualenv with the command `deactivate`
