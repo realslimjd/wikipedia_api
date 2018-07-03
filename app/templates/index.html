@@ -1,0 +1,11 @@
+{% extends "base.html" %}
+
+{% block content %}
+    {% for image in images %}
+    <div class="imgblock">
+        <div class="img-title"> {{ image.name }} </div>
+            <img src="{{ image.url }}">
+        <div class="img-user">Via user: {{ image.user }} </div>
+    </div>
+    {% endfor %}
+{% endblock %}

@@ -1,0 +1,11 @@
+<html>
+    <head>
+      <title>James's W2O App</title>
+      <link rel="stylesheet" href="{{ url_for('static', filename='nj_wiki.css') }}">
+    </head>
+    <body>
+        <div>This may take a second to load</div>
+        <hr>
+        {% block content %}{% endblock %}
+    </body>
+</html>

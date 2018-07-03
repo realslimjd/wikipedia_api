@@ -46,6 +46,7 @@ def find_images_on_page(session, debug=False):
     return image_titles
 
 
+# This could be threaded
 def get_image_metadata(session, image_names, debug=False):
     '''
     Returns a dict of dicts, where each key is the name of the image.
@@ -82,8 +83,9 @@ def get_image_metadata(session, image_names, debug=False):
         image_information.append(image_data)
 
     if debug:
-        for key in image_information:
-            print('{0} : {1}'.format(key, image_information[key]))
+        for image in image_information:
+            print('User {0} provided image {1} at {2}'.format(image['user'],
+                image['name'], image['url']))
 
     return image_information
 
